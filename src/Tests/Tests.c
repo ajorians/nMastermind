@@ -33,7 +33,7 @@ int TestConstruction()
    MasterLib api;
    int i;
    PRINT_FUNC;
-   if( MASTERLIB_OK != MastermindLibCreate(&api) )
+   if( MASTERLIB_OK != MastermindLibCreate(&api, Guessing) )
       return TEST_FAILED;
 
    if( MASTERLIB_OK != MastermindLibFree(&api) )

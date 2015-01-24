@@ -7,10 +7,15 @@ typedef void* MasterLib;
 #define MASTERLIB_BADARGUMENT		(-1)
 #define MASTERLIB_OUT_OF_MEMORY		(-2)
 
+typedef enum {
+  Guessing,
+  Creator
+} PlayMode;
+
 //////////////////////////////////////////////
 //Initalization/Error checking/Mode functions
 //////////////////////////////////////////////
-int MastermindLibCreate(MasterLib* api);
+int MastermindLibCreate(MasterLib* api, PlayMode eMode);
 //int MastermindLibCopy(MasterLib* copyapi, MasterLib orig);
 int MastermindLibFree(MasterLib* api);
 

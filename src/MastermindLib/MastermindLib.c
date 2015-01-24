@@ -9,14 +9,26 @@
 #include "MastermindLib/MastermindLib.h"
 #include "Defines.h"
 
+struct MastermindRow
+{
+  int m_aGuessSpots[4];
+  short m_nNumWhite;
+  short m_nNumBlack;
+};
+
 struct Mastermind
 {
    int m_nLastError;
+   PlayMode m_eMode;
+   struct MastermindRow m_aRows[10];
+   int m_nCurrentRow;
+   int m_aAnswer[4];
 };
 
-int MastermindLibCreate(MasterLib* api)
+int MastermindLibCreate(MasterLib* api, PlayMode eMode)
 {
-   struct MasterMind* pM;
+   struct Mastermind* pM;
+   int i,j;
    DEBUG_FUNC_NAME;
 
    pM = malloc(sizeof(struct Mastermind));
@@ -24,6 +36,18 @@ int MastermindLibCreate(MasterLib* api)
       return MASTERLIB_OUT_OF_MEMORY;
    }
 
+   pM->m_eMode = eMode;
+   pM->m_nCurrentRow = 0;
+   for(i=0; i<10; i++)
+     for(j=0; j<4; j++)
+       pM->m_aRows[i].m_aGuessSpots[j] = 0;
+     
+   if( pM->m_eMode == Guessing ) {
+     pM->m_aAnswer[0] = (rand() % 5) + 1;
+     pM->m_aAnswer[1] = (rand() % 5) + 1;
+     pM->m_aAnswer[2] = (rand() % 5) + 1;
+     pM->m_aAnswer[3] = (rand() % 5) + 1;
+   }
    pM->m_nLastError = MASTERLIB_OK;
 
    *api = pM;
@@ -77,7 +101,7 @@ void ClearMastermindLibError(MasterLib api)
    DEBUG_FUNC_NAME;
 
    pM = (struct Mastermind*)api;
-   pM->m_nLastError = HEARTSLIB_OK;
+   pM->m_nLastError = MASTERLIB_OK;
 }
 
 //MastermindLib related functions
