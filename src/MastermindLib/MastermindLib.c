@@ -12,8 +12,8 @@
 struct MastermindRow
 {
   int m_aGuessSpots[4];
+  short m_nNumRed;
   short m_nNumWhite;
-  short m_nNumBlack;
 };
 
 struct Mastermind
@@ -105,19 +105,96 @@ void ClearMastermindLibError(MasterLib api)
 }
 
 //MastermindLib related functions
-/*int GetHeartsGameOver(MasterLib api)
+int SetMasterCreatorAnswer(MasterLib api, int nCount, int arrValues[])
 {
-   struct Hearts* pH;
-   int nPlayerIndex;
+  struct Mastermind* pM;
    DEBUG_FUNC_NAME;
 
-   pH = (struct Hearts*)api;
+   pM = (struct Mastermind*)api;
+   
+   if( pM->m_eMode == Guessing )
+     return MASTERLIB_BADARGUMENT;
+   
+   pM->m_aAnswer[0] = arrValues[0];
+   pM->m_aAnswer[1] = arrValues[1];
+   pM->m_aAnswer[2] = arrValues[2];
+   pM->m_aAnswer[3] = arrValues[3];
+   
+  return MASTERLIB_OK;
+}
 
-   for(nPlayerIndex=0; nPlayerIndex < GetNumHeartsPlayers(api); nPlayerIndex++) {
-      if( GetHeartsPlayerScore(api, nPlayerIndex) >= pH->m_nScoreLimit )
-         return HEARTSLIB_GAME_OVER;
+int PlaceMasterColorPeg(MasterLib api, int nSpot, int nColor)
+{
+  struct Mastermind* pM;
+   DEBUG_FUNC_NAME;
+
+   pM = (struct Mastermind*)api;
+   
+   if( nSpot < 0 || nSpot > 3 )
+     return MASTERLIB_BADARGUMENT;
+   
+   if( nColor < 0 | nColor > 6 )//0 is ok and hard coded 6 for now
+     return MASTERLIB_BADARGUMENT;
+   
+   pM->m_aRows[pM->m_nCurrentRow].m_aGuessSpots[nSpot] = nColor;
+   
+   return MASTERLIB_OK;
+}
+
+int TakeMasterGuess(MasterLib api, int* pnReds, int* pnWhites)
+{
+   struct Mastermind* pM;
+   int i, j;
+   int nReds, nWhites;
+   DEBUG_FUNC_NAME;
+
+   pM = (struct Mastermind*)api;
+   
+   nReds = 0, nWhites = 0;
+   
+   for(i=0; i<4; i++)
+     if( pM->m_aRows[pM->m_nCurrentRow].m_aGuessSpots[i] == 0 )
+       return MASTERLIB_NOT_FILLED_YET;
+     
+   int arrCounted[] = { 0,0,0,0 };
+   //Look for reds
+   for(i=0; i<4; i++) {
+      if( pM->m_aRows[pM->m_nCurrentRow].m_aGuessSpots[i] == pM->m_aAnswer[i] ) {
+         nReds++;
+         arrCounted[i] = 1;
+      }
    }
+   
+   //Look for whites
+   for(i=0; i<4; i++) {
+      for(j=0; j<4; j++) {
+         if( i == j )
+            continue;
+         if( pM->m_aRows[pM->m_nCurrentRow].m_aGuessSpots[i] == pM->m_aAnswer[j] && arrCounted[j] == 0 ) {
+            nWhites++;
+            arrCounted[j] = 1;
+         }
+      }
+   }
+   
+   pM->m_aRows[pM->m_nCurrentRow].m_nNumRed = nReds;
+   pM->m_aRows[pM->m_nCurrentRow].m_nNumWhite = nWhites;
+ 
+   pM->m_nCurrentRow++;
+   
+   if( pnReds ) *pnReds = nReds;
+   if( pnWhites ) *pnWhites = nWhites;
+   
+   return MASTERLIB_OK;
+}
 
-   return HEARTSLIB_STILL_PLAYING;
-}*/
+int IsMasterGameOver(MasterLib api)
+{
+   struct Mastermind* pM;
+   DEBUG_FUNC_NAME;
+
+   pM = (struct Mastermind*)api;
+
+   return MASTERLIB_STILL_PLAYING;
+}
 

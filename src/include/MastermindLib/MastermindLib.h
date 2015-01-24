@@ -7,6 +7,12 @@ typedef void* MasterLib;
 #define MASTERLIB_BADARGUMENT		(-1)
 #define MASTERLIB_OUT_OF_MEMORY		(-2)
 
+//Take a guess returns
+#define MASTERLIB_NOT_FILLED_YET	(-1)
+
+#define MASTERLIB_STILL_PLAYING         (0)
+#define MASTERLIB_GAME_OVER             (1)
+
 typedef enum {
   Guessing,
   Creator
@@ -25,6 +31,9 @@ void ClearMasterLibError(MasterLib api);
 //////////////////////////////////////////////
 //MasterLib related functions
 //////////////////////////////////////////////
-//int GetHeartsPlayerScore(MasterLib api, int nPlayerIndex);
+int SetMasterCreatorAnswer(MasterLib api, int nCount, int arrValues[]);
+int PlaceMasterColorPeg(MasterLib, int nSpot, int nColor);
+int TakeMasterGuess(MasterLib api, int* pnReds, int* pnWhites);
+int IsMasterGameOver(MasterLib api);
 
 #endif
