@@ -1,8 +1,6 @@
 #include "Metrics.h"
-extern "C"
-{
-        //#include "BinaryLib/BinaryLib.h"
-}
+
+#define SIZE_PIECE	(20)
 
 Metrics::Metrics()
 {
@@ -21,17 +19,17 @@ int Metrics::GetHeight() const { return m_nHeight; }
 
 int Metrics::GetXPos(int nBoardX) const
 {
-   return 20 + nBoardX*15;
+   return 50 + nBoardX*SIZE_PIECE;
 }
 
 int Metrics::GetYPos(int nBoardY) const
 {
-   return (SCREEN_HEIGHT-nBoardY*15)-20;
+   return (SCREEN_HEIGHT-nBoardY*SIZE_PIECE)-20;
 }
 
 int Metrics::GetPieceSize() const
 {
-   return 15;
+   return SIZE_PIECE;
 }
 
 

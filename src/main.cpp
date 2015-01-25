@@ -8,7 +8,8 @@ extern "C"
 #include "Game.h"
 #include "Config.h"
 //#include "MouseHandling.h"
-//#include "Help.h"
+#include "Options.h"
+#include "Help.h"
 
 #define SCREEN_BIT_DEPTH        (16)
 #define SCREEN_VIDEO_MODE (SDL_SWSURFACE|SDL_FULLSCREEN|SDL_HWPALETTE)
@@ -61,15 +62,15 @@ int main(int argc, char *argv[])
 			}
 			
 			if( bShowOptions ) {
-				//Options ops(pScreen, &mouse, &config);
-				//while(ops.Loop()){}
-				//continue;
+				Options ops(pScreen/*, &mouse*/, &config);
+				while(ops.Loop()){}
+				continue;
 			}
 			else if( bShowHelp )
 			{
-				//HeartsHelp help(pScreen);
-				//while(help.Loop()){}
-				//continue;
+				MastermindHelp help(pScreen);
+				while(help.Loop()){}
+				continue;
 			}
 			else
 			{

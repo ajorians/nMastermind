@@ -7,7 +7,7 @@
 Background::Background(SDL_Surface* pScreen/*, Config* pConfig*/)
 : m_pScreen(pScreen), /*m_pConfig(pConfig),*/ m_nX(0)
 {
-   m_pBackground = nSDL_LoadImage(image_HeartsBackground);
+   m_pBackground = nSDL_LoadImage(image_Mastermind320);
 }
 
 Background::~Background()

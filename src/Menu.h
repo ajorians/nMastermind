@@ -32,9 +32,7 @@ protected:
 	SDL_Surface	*m_pScreen;//Does not own
 	//MouseHandling	*m_pMouseHandling;//Does not own
 	Background	m_Background;
-	//SDL_Surface	*m_pTitleGraphic;
 	SDL_Surface	*m_pPlayGraphic;
-	//SDL_Surface	*m_pOptionsGraphic;
 	nSDL_Font 	*m_pFont;
 	enum MenuChoice{Play, Options, Help, Quit};
 	MenuChoice 	m_eChoice;

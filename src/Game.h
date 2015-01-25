@@ -15,7 +15,6 @@ extern "C"
 
 #ifndef USE_GRAPHIC_YOU_WIN
 #include "Message.h"
-//#include "YouWinMessage.h"
 #endif
 
 class Config;
@@ -47,7 +46,6 @@ protected:
 	SDL_Surface	*m_pBackground;
 #ifndef USE_GRAPHIC_YOU_WIN
 	Message		m_YouWinMessage;
-        //YouWinMessage	m_YouWinMessage;
 #endif
 	nSDL_Font *m_pFont;
 	MasterLib m_Master;

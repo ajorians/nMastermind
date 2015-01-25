@@ -9,7 +9,7 @@ MainMenu::MainMenu(SDL_Surface* pScreen, Config* pConfig/*, MouseHandling* pMous
 : m_pScreen(pScreen), /*m_pMouseHandling(pMouseHandling),*/ m_Background(pScreen/*, pConfig*/), m_eChoice(Play), m_pConfig(pConfig)
 {
 	//m_pTitleGraphic 	= nSDL_LoadImage(image_nHeartsText);
-	m_pPlayGraphic		= nSDL_LoadImage(image_Play);
+	m_pPlayGraphic		= nSDL_LoadImage(image_MenuGray);
 	//m_pOptionsGraphic	= nSDL_LoadImage(image_OptionsAndHelp);
 	//SDL_SetColorKey(m_pTitleGraphic, SDL_SRCCOLORKEY, SDL_MapRGB(m_pTitleGraphic->format, 255, 255, 255));
 	SDL_SetColorKey(m_pPlayGraphic, SDL_SRCCOLORKEY, SDL_MapRGB(m_pPlayGraphic->format, 255, 255, 255));
@@ -141,35 +141,21 @@ void MainMenu::UpdateDisplay()
 		nSDL_DrawString(m_pScreen, m_pFont, SCREEN_WIDTH/2-30, 205, "Help");
 	} else {
 		m_Background.DrawBackground();
-		/*SDL_Rect rectTitle;
-		rectTitle.x = (SCREEN_WIDTH - m_pTitleGraphic->w)/2;
-		rectTitle.y = 15;
-		rectTitle.w = m_pTitleGraphic->w;
-		rectTitle.h = m_pTitleGraphic->h;
-		SDL_BlitSurface(m_pTitleGraphic, NULL, m_pScreen, &rectTitle);*/
 
 		SDL_Rect rectPlay;
-                rectPlay.x = (SCREEN_WIDTH - m_pPlayGraphic->w)/2;
-                rectPlay.y = 76;
+                rectPlay.x = 10;//(SCREEN_WIDTH - m_pPlayGraphic->w)/2;
+                rectPlay.y = 10;//76;
                 rectPlay.w = m_pPlayGraphic->w;
                 rectPlay.h = m_pPlayGraphic->h;
                 SDL_BlitSurface(m_pPlayGraphic, NULL, m_pScreen, &rectPlay);
-
-		/*SDL_Rect rectOptions;
-                rectOptions.x = (SCREEN_WIDTH - m_pOptionsGraphic->w)/2;
-                rectOptions.y = 179;
-                rectOptions.w = m_pOptionsGraphic->w;
-                rectOptions.h = m_pOptionsGraphic->h;
-                SDL_BlitSurface(m_pOptionsGraphic, NULL, m_pScreen, &rectOptions);*/
 	}
 
 	if( m_eChoice == Play )
-		draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), SCREEN_WIDTH/2-60, 70, 120, 30
-	, 1);
+		draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), 0, 7, 120, 30, 1);
 	else if( m_eChoice == Options )
-		draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), 114, 172, 96, 24, 1);
+		draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), 0, 45, 96, 24, 1);
 	if( m_eChoice == Help )
-		draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), 130, 195, 60, 25, 1);
+		draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), 0, 70, 60, 25, 1);
 
 	SDL_UpdateRect(m_pScreen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }

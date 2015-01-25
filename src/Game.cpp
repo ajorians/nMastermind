@@ -19,7 +19,7 @@ Game::Game(SDL_Surface* pScreen/*, MouseHandling* pMouse*/, Config* pConfig)
 
 	m_pFont = nSDL_LoadFont(NSDL_FONT_THIN, 0/*R*/, 0/*G*/, 0/*B*/);
 
-	m_pBackground = nSDL_LoadImage(image_cardbackground);
+	m_pBackground = nSDL_LoadImage(image_MastermindBoard);
 
 	m_Metrics.SetBoardDimensions(4, 10);
 }
@@ -132,19 +132,25 @@ void Game::UpdateDisplay()
 #endif
 
    for(int y=0; y<10; y++) {
+      nSDL_DrawString(m_pScreen, m_pFont, m_Metrics.GetXPos(0)-20, m_Metrics.GetYPos(y)+3, "%d", y+1);
       for(int x=0; x<4; x++) {
-         int nX = x*15+20, nY = SCREEN_HEIGHT-(y*15)-20, nWidth = 15, nHeight = 15;
          int nPiece = GetMasterColorPeg(m_Master, y, x);
          //if( nPiece == 0 )
             //continue;
-         DisplayPiece(nX, nY, nPiece);
+         DisplayPiece(m_Metrics.GetXPos(x), m_Metrics.GetYPos(y), nPiece);
       }
 
       int nRed, nWhite;
       GetMasterResult(m_Master, y, &nRed, &nWhite);
-      DrawRedWhite(80, SCREEN_HEIGHT-(y*15)-20, nRed, nWhite);
-      //nSDL_DrawString(m_pScreen, m_pFont, 80, SCREEN_HEIGHT-(y*15)-20, "%d - %d", nRed, nWhite);
+      DrawRedWhite(m_Metrics.GetXPos(3)+m_Metrics.GetPieceSize(), m_Metrics.GetYPos(y), nRed, nWhite);
    }
+
+   DisplayPiece(SCREEN_WIDTH-m_Metrics.GetPieceSize()*4, SCREEN_HEIGHT-m_Metrics.GetPieceSize()*3-7, 1);
+   DisplayPiece(SCREEN_WIDTH-m_Metrics.GetPieceSize()*3, SCREEN_HEIGHT-m_Metrics.GetPieceSize()*3-7, 2);
+   DisplayPiece(SCREEN_WIDTH-m_Metrics.GetPieceSize()*2, SCREEN_HEIGHT-m_Metrics.GetPieceSize()*3-7, 3);
+   DisplayPiece(SCREEN_WIDTH-m_Metrics.GetPieceSize()*4, SCREEN_HEIGHT-m_Metrics.GetPieceSize()*2-7, 4);
+   DisplayPiece(SCREEN_WIDTH-m_Metrics.GetPieceSize()*3, SCREEN_HEIGHT-m_Metrics.GetPieceSize()*2-7, 5);
+   DisplayPiece(SCREEN_WIDTH-m_Metrics.GetPieceSize()*2, SCREEN_HEIGHT-m_Metrics.GetPieceSize()*2-7, 6);
 
    if( MASTERLIB_GAME_OVER == IsMasterGameOver(m_Master) ) {
       ShowSolution();
@@ -190,7 +196,11 @@ void Game::EvaluatePegs()
       m_Selector.IncrementRow();
       if( MASTERLIB_GAME_OVER == IsMasterGameOver(m_Master) ) {
 #ifndef USE_GRAPHIC_YOU_WIN
-         m_YouWinMessage.CreateMessage("You Win!!!\n******");
+         if( MASTERLIB_WON_GAME == GetMasterWonGame(m_Master) ) {
+            m_YouWinMessage.CreateMessage("You Win!!!\n******");
+         } else {
+            m_YouWinMessage.CreateMessage("No Moves\nGame Over");
+         }
 #endif
       }
    }
@@ -198,26 +208,29 @@ void Game::EvaluatePegs()
 
 void Game::RemoveCurrentPeg()
 {
+   PlaceMasterColorPeg(m_Master, m_Selector.GetCurrentX(), 0);
 }
 
 void Game::DrawRedWhite(int nX, int nY, int nRed, int nWhite)
 {
    for(int i=0; i<nRed; i++) {
-      filledEllipseRGBA(m_pScreen, nX+4, nY+4, 4, 4, 0, 0, 0, 255);
+      filledEllipseRGBA(m_pScreen, nX+4, nY+6, 4, 4, 0, 0, 0, 255);
       nX += 10;
    }
-   for(int i=0; i<nRed; i++) {
-      filledEllipseRGBA(m_pScreen, nX+4, nY+4, 4, 4, 255, 255, 255, 255);
+   for(int i=0; i<nWhite; i++) {
+      filledEllipseRGBA(m_pScreen, nX+4, nY+6, 4, 4, 255, 255, 255, 255);
       nX += 10;
    }
 }
 
 void Game::ShowSolution()
 {
-   DisplayPiece(20, 0, GetMasterSolutionPeg(m_Master, 0));
-   DisplayPiece(35, 0, GetMasterSolutionPeg(m_Master, 1));
-   DisplayPiece(50, 0, GetMasterSolutionPeg(m_Master, 2));
-   DisplayPiece(65, 0, GetMasterSolutionPeg(m_Master, 3));
+   int nX = m_Metrics.GetXPos(3) + 20*5+5;
+   int nY = 50;
+   DisplayPiece(nX, nY, GetMasterSolutionPeg(m_Master, 0));
+   DisplayPiece(nX+m_Metrics.GetPieceSize(), nY, GetMasterSolutionPeg(m_Master, 1));
+   DisplayPiece(nX+m_Metrics.GetPieceSize()*2, nY, GetMasterSolutionPeg(m_Master, 2));
+   DisplayPiece(nX+m_Metrics.GetPieceSize()*3, nY, GetMasterSolutionPeg(m_Master, 3));
 }
 
 void Game::DisplayPiece(int nX, int nY, int nPiece)
@@ -226,7 +239,7 @@ void Game::DisplayPiece(int nX, int nY, int nPiece)
    switch(nPiece) {
       default:
       case 0:
-         nR = 0, nG = 0, nB = 0;
+         nR = 208, nG = 208, nB = 208;
       break;
 
       case 1:

@@ -248,6 +248,21 @@ int IsMasterGameOver(MasterLib api)
    return MASTERLIB_STILL_PLAYING;
 }
 
+int GetMasterWonGame(MasterLib api)
+{
+   struct Mastermind* pM;
+   DEBUG_FUNC_NAME;
+
+   pM = (struct Mastermind*)api;
+   if( pM->m_eState == GameLost )
+      return MASTERLIB_LOST_GAME;
+
+   if( pM->m_eState == GameWon )
+      return MASTERLIB_WON_GAME;
+
+   return 2;//TODO: Add define
+}
+
 int GetMasterSolutionPeg(MasterLib api, int nSpot)
 {
    struct Mastermind* pM;

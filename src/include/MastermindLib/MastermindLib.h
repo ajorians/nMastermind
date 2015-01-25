@@ -13,6 +13,9 @@ typedef void* MasterLib;
 #define MASTERLIB_STILL_PLAYING         (0)
 #define MASTERLIB_GAME_OVER             (1)
 
+#define MASTERLIB_LOST_GAME		(0)
+#define MASTERLIB_WON_GAME		(1)
+
 typedef enum {
   Guessing,
   Creator
@@ -37,6 +40,7 @@ int GetMasterResult(MasterLib api, int nRow, int* pnRed, int* pnWhite);
 int PlaceMasterColorPeg(MasterLib, int nSpot, int nColor);
 int TakeMasterGuess(MasterLib api, int* pnReds, int* pnWhites);
 int IsMasterGameOver(MasterLib api);
+int GetMasterWonGame(MasterLib api);
 int GetMasterSolutionPeg(MasterLib api, int nSpot);
 
 #endif

@@ -72,6 +72,8 @@ void Selector::DrawSelector()
         0;
 #endif
 
+   nExtraX -= 3;
+   nExtraY -= 3;
 
    //Top
    thickLineRGBA(m_pScreen, m_pBoardMetrics->GetXPos(nX) + nExtraX, m_pBoardMetrics->GetYPos(nY) + nExtraY, m_pBoardMetrics->GetXPos(nX) + m_pBoardMetrics->GetPieceSize() + nExtraX, m_pBoardMetrics->GetYPos(nY) + nExtraY, SELECTOR_LINE_WIDTH, r, g, b, a);
