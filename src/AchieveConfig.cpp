@@ -31,48 +31,64 @@ bool AchieveConfig::Won5Games() const
    return m_pConfig->GetGamesWon() >= 5;
 }
 
-/*bool AchieveConfig::LookForAchievements(HeartsLib hearts)
+bool AchieveConfig::Win8Colors() const
+{
+   return m_pConfig->GetWin8Colors() > 0;
+}
+
+bool AchieveConfig::Win5Holes() const
+{
+   return m_pConfig->GetWin5Holes() > 0;
+}
+
+bool AchieveConfig::WinLastTry() const
+{
+   return m_pConfig->GetWinLastTry() > 0;
+}
+
+bool AchieveConfig::LookForAchievements(MasterLib mastermind)
 {
    int nGamesPlayed = m_pConfig->GetGamesPlayed();
    int nGamesWon = m_pConfig->GetGamesWon();
-   int TimesShotMoon = m_pConfig->GetTimesShotMoon();
-   int TimesWon0Points = m_pConfig->GetWonWith0Points();
+   int TimesWin8Colors = m_pConfig->GetWin8Colors();
+   int TimesWin5Holes = m_pConfig->GetWin5Holes();
+   int TimesWinLastTry = m_pConfig->GetWinLastTry();
    bool bNewAchievement = false;
 
-   if( GetHeartsGameOver(hearts) == HEARTSLIB_GAME_OVER ) {
-      int nScore0 = GetHeartsPlayerScore(hearts, 0);
-      int nScore1 = GetHeartsPlayerScore(hearts, 1);
-      int nScore2 = GetHeartsPlayerScore(hearts, 2);
-      int nScore3 = GetHeartsPlayerScore(hearts, 3);
-      if( nScore0 < nScore1 && nScore0 < nScore2 && nScore0 < nScore3 ) {
-         m_pConfig->SetGamesWon(m_pConfig->GetGamesWon()+1);
-         if( nGamesWon==0 || nGamesWon == 4 )
-            bNewAchievement = true;
-      }
-
-      if( nScore0 == 0 ) {
-         m_pConfig->SetWonWith0Points(m_pConfig->GetWonWith0Points()+1);
-         if( TimesWon0Points == 0 )
-            bNewAchievement = true;
-      }
-
-      if( nGamesPlayed == 0 || nGamesPlayed == 9 )
-         bNewAchievement = true;
+   if( IsMasterGameOver(mastermind) == MASTERLIB_GAME_OVER ) {
       m_pConfig->SetGamesPlayed(m_pConfig->GetGamesPlayed()+1);
-   }
-
-   int nPlayerIndex = -1;
-   if( GetPlayerShotMoon(hearts, &nPlayerIndex) == HEARTSLIB_SHOT_THE_MOON ) {
-      m_pConfig->SetTimesShotMoon(m_pConfig->GetTimesShotMoon()+1);
-      if( TimesShotMoon == 0 )
+      if( nGamesPlayed==0 || nGamesPlayed==9 )
          bNewAchievement = true;
    }
 
-   //Look for shot the moon, won with 0 points, won game
+   if( GetMasterWonGame(mastermind) == MASTERLIB_WON_GAME ) {
+      m_pConfig->SetGamesWon(m_pConfig->GetGamesWon()+1);
+      if( nGamesWon==0 || nGamesWon==4 )
+         bNewAchievement = true;
+   }
+
+   if( GetMasterWonGame(mastermind) == MASTERLIB_WON_GAME && m_pConfig->GetColors() == 8 ) {
+      m_pConfig->SetWin8Colors(m_pConfig->GetWin8Colors()+1);
+      if( TimesWin8Colors == 0 )
+         bNewAchievement = true;
+   }
+
+   if( GetMasterWonGame(mastermind) == MASTERLIB_WON_GAME && m_pConfig->GetHoles() == 5 ) {
+      m_pConfig->SetWin5Holes(m_pConfig->GetWin5Holes()+1);
+      if( TimesWin5Holes == 0 )
+         bNewAchievement = true;
+   }
+
+   if( GetMasterWonGame(mastermind) == MASTERLIB_WON_GAME && GetCurrentTry(mastermind)>=m_pConfig->GetTries() ) {
+      m_pConfig->SetWinLastTry(m_pConfig->GetWinLastTry()+1);
+      if( TimesWinLastTry == 0 )
+         bNewAchievement = true;
+   }
+
    if( bNewAchievement )
       m_bNewAchievement = bNewAchievement;
    return bNewAchievement;
-}*/
+}
 
 bool AchieveConfig::GetNewAchievements() const
 {

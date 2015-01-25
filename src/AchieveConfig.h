@@ -4,7 +4,7 @@
 extern "C"
 {
 	#include <os.h>
-	//#include "HeartsLib/HeartsLib.h"
+	#include "MastermindLib/MastermindLib.h"
 }
 
 class Config;
@@ -19,8 +19,11 @@ public:
    bool Played10Games() const;
    bool WonAGame() const;
    bool Won5Games() const;
+   bool Win8Colors() const;
+   bool Win5Holes() const;
+   bool WinLastTry() const;
 
-   //bool LookForAchievements(HeartsLib hearts);
+   bool LookForAchievements(MasterLib mastermind);
 
    Config* GetConfig() { return m_pConfig; }
 

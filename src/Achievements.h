@@ -30,7 +30,7 @@ protected:
 
 protected:
 	SDL_Surface	*m_pScreen;//Does not own
-	enum AchievementChoice{None, PlayedAGame, Played10Games, WonAGame, Won5Games};
+	enum AchievementChoice{None, PlayedAGame, Played10Games, WonAGame, Won5Games, Win8Colors, Win5Holes, WinLastTry};
 	AchievementChoice m_eChoice;
 	nSDL_Font	*m_pFont;
 	nSDL_Font	*m_pFontRed;
@@ -40,6 +40,9 @@ protected:
 	SDL_Surface	*m_imgPlayed10Games;
 	SDL_Surface	*m_imgWonAGame;
 	SDL_Surface	*m_imgWon5Games;
+	SDL_Surface	*m_imgWin8Colors;
+	SDL_Surface	*m_imgWin5Holes;
+	SDL_Surface	*m_imgWinLastTry;
 
 	SDL_Surface	*m_imgStar;
 

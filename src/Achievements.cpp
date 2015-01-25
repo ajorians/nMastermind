@@ -6,6 +6,9 @@
 #include "PlayTenGraphic.h"
 #include "WinGraphic.h"
 #include "Win5Graphic.h"
+#include "ColorGraphic.h"
+#include "HoleGraphic.h"
+#include "SweatGraphic.h"
 #include "StarGraphic.h"
 #include "Defines.h"
 
@@ -72,10 +75,13 @@ Achievements::Achievements(SDL_Surface* pScreen, AchieveConfig* pAchieveConfig/*
 
 	m_pFontRed = nSDL_LoadFont(NSDL_FONT_THIN, 255, 0, 0);
 
-	m_imgPlayedAGame = LoadImage(image_Play1);
-	m_imgPlayed10Games = LoadImage(image_Play10);
+	m_imgPlayedAGame = LoadImage(image_PlayOne);
+	m_imgPlayed10Games = LoadImage(image_Game10);
 	m_imgWonAGame = LoadImage(image_Win);
 	m_imgWon5Games = LoadImage(image_Win5_2);
+	m_imgWin8Colors = LoadImage(image_Colors);
+	m_imgWin5Holes = LoadImage(image_BlueHole);
+	m_imgWinLastTry = LoadImage(image_Sweat);
 
 	m_imgStar                 = LoadImage(image_Star);
 
@@ -90,6 +96,9 @@ Achievements::~Achievements()
 	SDL_FreeSurface(m_imgPlayed10Games);
 	SDL_FreeSurface(m_imgWonAGame);
 	SDL_FreeSurface(m_imgWon5Games);
+	SDL_FreeSurface(m_imgWin8Colors);
+	SDL_FreeSurface(m_imgWin5Holes);
+	SDL_FreeSurface(m_imgWinLastTry);
 
 	SDL_FreeSurface(m_imgStar);
 }
@@ -191,8 +200,22 @@ void Achievements::Move(Achievement_Direction eDirection)
 		goto Exit;
 	}
 	if( eDirection == A_Up ) {
+		if( m_eChoice == Win8Colors ) {
+			m_eChoice = PlayedAGame;
+		} else if( m_eChoice == Win5Holes ) {
+			m_eChoice = Played10Games;
+		} else if( m_eChoice == WinLastTry ) {
+			m_eChoice = WonAGame;
+		}
 	}
 	else if( eDirection == A_Down ) {
+		if( m_eChoice == PlayedAGame ) {
+			m_eChoice = Win8Colors;
+		} else if( m_eChoice == Played10Games ) {
+			m_eChoice = Win5Holes;
+		} else if( m_eChoice == WonAGame ) {
+			m_eChoice = WinLastTry;
+		}
 	}
 	else if( eDirection == A_Left ) {
 		if( m_eChoice == Played10Games ) {
@@ -204,6 +227,15 @@ void Achievements::Move(Achievement_Direction eDirection)
 		else if( m_eChoice == Won5Games ) {
 			m_eChoice = WonAGame;
 		}
+		else if( m_eChoice == Win8Colors ) {
+			m_eChoice = Won5Games;
+		}
+		else if( m_eChoice == Win5Holes ) {
+			m_eChoice = Win8Colors;
+		}
+		else if( m_eChoice == WinLastTry ) {
+			m_eChoice = Win5Holes;
+		}
 	}
 	else if( eDirection == A_Right ) {
 		if( m_eChoice == PlayedAGame ) {
@@ -214,6 +246,15 @@ void Achievements::Move(Achievement_Direction eDirection)
 		}
 		else if( m_eChoice == WonAGame ) {
 			m_eChoice = Won5Games;
+		}
+		else if( m_eChoice == Won5Games ) {
+			m_eChoice = Win8Colors;
+		}
+		else if( m_eChoice == Win8Colors ) {
+			m_eChoice = Win5Holes;
+		}
+		else if( m_eChoice == Win5Holes ) {
+			m_eChoice = WinLastTry;
 		}
 	}
 
@@ -241,6 +282,15 @@ void Achievements::UpdateDoneAmounts()
 		break;
 	case Won5Games:
 		m_Progress.SetDoneAmount(Puz_Min(5, pConfig->GetGamesWon()), 5);
+		break;
+	case Win8Colors:
+		m_Progress.SetDoneAmount(Puz_Min(1, pConfig->GetWin8Colors()), 1);
+		break;
+	case Win5Holes:
+		m_Progress.SetDoneAmount(Puz_Min(1, pConfig->GetWin5Holes()), 1);
+		break;
+	case WinLastTry:
+		m_Progress.SetDoneAmount(Puz_Min(1, pConfig->GetWinLastTry()), 1);
 		break;
 	}
 }
@@ -274,6 +324,9 @@ void Achievements::UpdateDisplay()
         DrawAchievement(m_pAchieveConfig->Played10Games(), m_imgPlayed10Games, m_pScreen, 80, 30, m_imgStar);
         DrawAchievement(m_pAchieveConfig->WonAGame(), m_imgWonAGame, m_pScreen, 130, 30, m_imgStar);
         DrawAchievement(m_pAchieveConfig->Won5Games(), m_imgWon5Games, m_pScreen, 180, 30, m_imgStar);
+        DrawAchievement(m_pAchieveConfig->Win8Colors(), m_imgWin8Colors, m_pScreen, 30, 80, m_imgStar);
+        DrawAchievement(m_pAchieveConfig->Win5Holes(), m_imgWin5Holes, m_pScreen, 80, 80, m_imgStar);
+        DrawAchievement(m_pAchieveConfig->WinLastTry(), m_imgWinLastTry, m_pScreen, 130, 80, m_imgStar);
 
 	char buffer[256];
 
@@ -306,6 +359,25 @@ Win at least 5 games!");
 		draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), 180, 30, 32, 32, 1);
 		bAchieved = m_pAchieveConfig->Won5Games();
 	}
+	else if( m_eChoice == Win8Colors ) {
+		strcpy(buffer, "Win with 8 colors:\n\
+Win a game playing with 8 colors!");
+                draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), 30, 80, 32, 32, 1);
+                bAchieved = m_pAchieveConfig->Win8Colors();
+        }
+	else if( m_eChoice == Win5Holes ) {
+                strcpy(buffer, "Win with 5 holes:\n\
+Win a game playing with 5 holes!");
+                draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), 80, 80, 32, 32, 1);
+                bAchieved = m_pAchieveConfig->Win5Holes();
+        }
+	else if( m_eChoice == WinLastTry ) {
+                strcpy(buffer, "Win on last try:\n\
+Win a game on the very last try!");
+                draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), 130, 80, 32, 32, 1);
+                bAchieved = m_pAchieveConfig->WinLastTry();
+        }
+
         nSDL_DrawString(m_pScreen, m_pFont, nLeft, nTop + 20, buffer);
 
 	if( bAchieved ) {

@@ -291,3 +291,11 @@ int GetMasterSolutionPeg(MasterLib api, int nSpot)
    return pM->m_aAnswer[nSpot];
 }
 
+int GetCurrentTry(MasterLib api)
+{
+   struct Mastermind* pM;
+   DEBUG_FUNC_NAME;
+
+   pM = (struct Mastermind*)api;
+   return pM->m_nCurrentRow;
+}

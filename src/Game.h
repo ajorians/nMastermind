@@ -18,12 +18,13 @@ extern "C"
 #endif
 
 class Config;
+class AchieveConfig;
 //class MouseHandling;
 
 class Game
 {
 public:
-	Game(SDL_Surface* pScreen /*MouseHandling* pMouse*/, Config* pConfig);
+	Game(SDL_Surface* pScreen /*MouseHandling* pMouse*/, Config* pConfig, AchieveConfig* pAchieve);
 	~Game();
 
 	bool Loop();
@@ -45,6 +46,7 @@ protected:
 	SDL_Surface	*m_pScreen;//Does not own
 	//MouseHandling	*m_pMouse;//Does not own
 	Config		*m_pConfig;//Does not own
+	AchieveConfig	*m_pAchieve;//Does not own
 	SDL_Surface	*m_pBackground;
 #ifndef USE_GRAPHIC_YOU_WIN
 	Message		m_YouWinMessage;

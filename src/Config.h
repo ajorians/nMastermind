@@ -29,6 +29,9 @@ public:
 //Achievements
    MAKE_CONFIG_ITEM(int, GamesPlayed);
    MAKE_CONFIG_ITEM(int, GamesWon);
+   MAKE_CONFIG_ITEM(int, Win8Colors);
+   MAKE_CONFIG_ITEM(int, Win5Holes);
+   MAKE_CONFIG_ITEM(int, WinLastTry);
 
 public:
    //char m_LevelData[2048];

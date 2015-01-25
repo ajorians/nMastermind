@@ -1,6 +1,7 @@
 #include "Game.h"
 #include "BoardBackground.h"
 #include "Config.h"
+#include "AchieveConfig.h"
 //#include "MouseHandling.h"
 
 extern "C"
@@ -8,8 +9,8 @@ extern "C"
 #include "SDL/SDL_gfxPrimitives.h"
 }
 
-Game::Game(SDL_Surface* pScreen/*, MouseHandling* pMouse*/, Config* pConfig)
-: m_pScreen(pScreen)/*, m_pMouse(pMouse)*/, m_pConfig(pConfig)
+Game::Game(SDL_Surface* pScreen/*, MouseHandling* pMouse*/, Config* pConfig, AchieveConfig* pAchieve)
+: m_pScreen(pScreen)/*, m_pMouse(pMouse)*/, m_pConfig(pConfig), m_pAchieve(pAchieve)
 #ifndef USE_GRAPHIC_YOU_WIN
 , m_YouWinMessage(pScreen)
 #endif
@@ -220,6 +221,7 @@ void Game::EvaluatePegs()
             m_YouWinMessage.CreateMessage("No Moves\nGame Over");
          }
 #endif
+	m_pAchieve->LookForAchievements(m_Master);
       }
    }
 }

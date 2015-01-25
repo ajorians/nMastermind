@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
 			{
 				bool bPlay = true;
 				while( bPlay ) {
-					Game game(pScreen/*, &mouse*/, &config);
+					Game game(pScreen/*, &mouse*/, &config, &ac);
 					while(game.Loop()){}
 
 					bPlay = false;

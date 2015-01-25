@@ -42,5 +42,6 @@ int TakeMasterGuess(MasterLib api, int* pnReds, int* pnWhites);
 int IsMasterGameOver(MasterLib api);
 int GetMasterWonGame(MasterLib api);
 int GetMasterSolutionPeg(MasterLib api, int nSpot);
+int GetCurrentTry(MasterLib api);
 
 #endif

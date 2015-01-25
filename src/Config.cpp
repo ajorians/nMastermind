@@ -9,6 +9,9 @@
 
 #define GAMES_PLAYED_DEFAULT            (0)
 #define GAMES_WON_DEFAULT               (0)
+#define WIN_8_COLORS_DEFAULT		(0)
+#define WIN_5_HOLES_DEFAULT		(0)
+#define WIN_LAST_TRY_DEFAULT		(0)
 
 #define STRINGIFY_CONFIG_ITEM(x) #x
 
@@ -42,7 +45,10 @@ m_Holes(HOLES_DEFAULT),
 m_Colors(COLORS_DEFAULT),
 m_Tries(TRIES_DEFAULT), 
 m_GamesPlayed(GAMES_PLAYED_DEFAULT),
-m_GamesWon(GAMES_WON_DEFAULT)
+m_GamesWon(GAMES_WON_DEFAULT),
+m_Win8Colors(WIN_8_COLORS_DEFAULT),
+m_Win5Holes(WIN_5_HOLES_DEFAULT),
+m_WinLastTry(WIN_LAST_TRY_DEFAULT)
 {
    ArchiveCreate(&m_Archive);
 
@@ -64,6 +70,9 @@ m_GamesWon(GAMES_WON_DEFAULT)
 //Achievements
       READ_INT_CONFIG_VAR(GamesPlayed);
       READ_INT_CONFIG_VAR(GamesWon);
+      READ_INT_CONFIG_VAR(Win8Colors);
+      READ_INT_CONFIG_VAR(Win5Holes);
+      READ_INT_CONFIG_VAR(WinLastTry);
    }
 }
 
@@ -83,6 +92,9 @@ Config::~Config()
 //Achievements
    WRITE_INT_CONFIG_VAR(GamesPlayed);
    WRITE_INT_CONFIG_VAR(GamesWon);
+   WRITE_INT_CONFIG_VAR(Win8Colors);
+   WRITE_INT_CONFIG_VAR(Win5Holes);
+   WRITE_INT_CONFIG_VAR(WinLastTry);
 
    ArchiveSetBatchMode(m_Archive, ARCHIVE_DISABLE_BATCH);
 
