@@ -10,12 +10,13 @@ extern "C"
 #include "Background.h"
 #include "Config.h"
 
+class AchieveConfig;
 //class MouseHandling;
 
 class MainMenu
 {
 public:
-	MainMenu(SDL_Surface* pScreen, Config* pConfig/*, MouseHandling* pMouseHandling*/);
+	MainMenu(SDL_Surface* pScreen, Config* pConfig, AchieveConfig* pAchieveConfig/*, MouseHandling* pMouseHandling*/);
 	~MainMenu();
 
 	bool Loop();
@@ -23,6 +24,7 @@ public:
 	bool ShouldQuit() const;
 	bool ShowShowOptions() const;
 	bool ShouldShowHelp() const;
+	bool ShouldShowAchievements() const;
 	
 protected:
 	bool PollEvents();
@@ -33,10 +35,14 @@ protected:
 	//MouseHandling	*m_pMouseHandling;//Does not own
 	Background	m_Background;
 	SDL_Surface	*m_pPlayGraphic;
+	SDL_Surface     *m_pStar;
 	nSDL_Font 	*m_pFont;
-	enum MenuChoice{Play, Options, Help, Quit};
+	enum MenuChoice{Play, Options, Help, Achieve, Quit};
 	MenuChoice 	m_eChoice;
 	Config		*m_pConfig;
+	AchieveConfig   *m_pAchieve;
+        bool            m_bNewAchievement;
+	int             m_nFlashAchievement;
 };
 
 #endif

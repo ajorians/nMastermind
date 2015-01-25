@@ -8,6 +8,8 @@ extern "C"
 #include "Game.h"
 #include "Config.h"
 //#include "MouseHandling.h"
+#include "AchieveConfig.h"
+#include "Achievements.h"
 #include "Options.h"
 #include "Help.h"
 
@@ -34,7 +36,7 @@ int main(int argc, char *argv[])
 	//ArchiveSetCurrentDirectory(argv[0]);
 	Config config;
 	//MouseHandling mouse(&config);
-	//AchieveConfig ac(&config);
+	AchieveConfig ac(&config);
 
 	if( pScreen == NULL )
 	{
@@ -48,17 +50,18 @@ int main(int argc, char *argv[])
 
 		while(true)
 		{
-			bool bShowHelp = false, bShowOptions = false;
+			bool bShowHelp = false, bShowOptions = false, bShowAchievements = false;
 			SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
 
 			if( argc != 2 )
 			{
-				MainMenu menu(pScreen, &config/*, &mouse*/);
+				MainMenu menu(pScreen, &config/*, &mouse*/, &ac);
 				while(menu.Loop()){}
 				if( menu.ShouldQuit() )
 					break;
 				bShowHelp = menu.ShouldShowHelp();
 				bShowOptions = menu.ShowShowOptions();
+				bShowAchievements = menu.ShouldShowAchievements();
 			}
 			
 			if( bShowOptions ) {
@@ -66,6 +69,11 @@ int main(int argc, char *argv[])
 				while(ops.Loop()){}
 				continue;
 			}
+			else if( bShowAchievements ) {
+                                Achievements ach(pScreen, &ac);
+                                while(ach.Loop()){}
+                                continue;
+                        }
 			else if( bShowHelp )
 			{
 				MastermindHelp help(pScreen);

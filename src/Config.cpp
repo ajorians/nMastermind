@@ -4,6 +4,9 @@
 #define SELECTOR_ANIMATE_DEFAULT        (true)
 #define BACKGROUND_MOVES_DEFAULT	(true)
 
+#define GAMES_PLAYED_DEFAULT            (0)
+#define GAMES_WON_DEFAULT               (0)
+
 #define STRINGIFY_CONFIG_ITEM(x) #x
 
 #define READ_BOOL_CONFIG_VAR(identifier) if( strcmp(strName, STRINGIFY_CONFIG_ITEM(Use##identifier) ) == 0 ) {\
@@ -30,7 +33,10 @@
 #define WRITE_STRING_CONFIG_VAR(identifier) UpdateArchiveEntry(m_Archive, "Settings", STRINGIFY_CONFIG_ITEM(Current##identifier), m_##identifier, NULL);
 
 Config::Config()
-: m_SelectorMovementAnimate(SELECTOR_ANIMATE_DEFAULT), m_BackgroundMoves(BACKGROUND_MOVES_DEFAULT), m_CurrentLevel(0)
+: m_SelectorMovementAnimate(SELECTOR_ANIMATE_DEFAULT), 
+m_BackgroundMoves(BACKGROUND_MOVES_DEFAULT), 
+m_GamesPlayed(GAMES_PLAYED_DEFAULT),
+m_GamesWon(GAMES_WON_DEFAULT)
 {
    /*ArchiveCreate(&m_Archive);
 

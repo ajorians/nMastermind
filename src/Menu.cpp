@@ -1,28 +1,27 @@
 #include "Menu.h"
 //#include "MouseHandling.h"
-//#include "HeartsGraphic.h"
 #include "PlayGraphic.h"
-//#include "OptionsHelpGraphic.h"
+#include "AchieveConfig.h"
+#include "StarGraphic.h"
 #include "Defines.h"
 
-MainMenu::MainMenu(SDL_Surface* pScreen, Config* pConfig/*, MouseHandling* pMouseHandling*/)
-: m_pScreen(pScreen), /*m_pMouseHandling(pMouseHandling),*/ m_Background(pScreen/*, pConfig*/), m_eChoice(Play), m_pConfig(pConfig)
+MainMenu::MainMenu(SDL_Surface* pScreen, Config* pConfig, AchieveConfig* pAchieve/*, MouseHandling* pMouseHandling*/)
+: m_pScreen(pScreen), /*m_pMouseHandling(pMouseHandling),*/ m_Background(pScreen/*, pConfig*/), m_eChoice(Play), m_pConfig(pConfig), m_pAchieve(pAchieve), m_nFlashAchievement(0)
 {
-	//m_pTitleGraphic 	= nSDL_LoadImage(image_nHeartsText);
 	m_pPlayGraphic		= nSDL_LoadImage(image_MenuGray);
-	//m_pOptionsGraphic	= nSDL_LoadImage(image_OptionsAndHelp);
-	//SDL_SetColorKey(m_pTitleGraphic, SDL_SRCCOLORKEY, SDL_MapRGB(m_pTitleGraphic->format, 255, 255, 255));
+	m_pStar                 = nSDL_LoadImage(image_Star);
 	SDL_SetColorKey(m_pPlayGraphic, SDL_SRCCOLORKEY, SDL_MapRGB(m_pPlayGraphic->format, 255, 255, 255));
-	//SDL_SetColorKey(m_pOptionsGraphic, SDL_SRCCOLORKEY, SDL_MapRGB(m_pOptionsGraphic->format, 255, 255, 255));
+	SDL_SetColorKey(m_pStar, SDL_SRCCOLORKEY, SDL_MapRGB(m_pStar->format, 0, 0, 0));
 
 	m_pFont = nSDL_LoadFont(NSDL_FONT_THIN, 0/*R*/, 0/*G*/, 0/*B*/);
+
+	m_bNewAchievement = pAchieve->GetNewAchievements();
 }
 
 MainMenu::~MainMenu()
 {
-	//SDL_FreeSurface(m_pTitleGraphic);
 	SDL_FreeSurface(m_pPlayGraphic);
-	//SDL_FreeSurface(m_pOptionsGraphic);
+	SDL_FreeSurface(m_pStar);
 	nSDL_FreeFont(m_pFont);
 }
 
@@ -49,6 +48,11 @@ bool MainMenu::ShouldQuit() const
 bool MainMenu::ShowShowOptions() const
 {
 	return m_eChoice == Options;
+}
+
+bool MainMenu::ShouldShowAchievements() const
+{
+        return m_eChoice == Achieve;
 }
 
 bool MainMenu::ShouldShowHelp() const
@@ -83,12 +87,16 @@ bool MainMenu::PollEvents()
 						if( m_eChoice == Help )
 							m_eChoice = Options;
 						else if( m_eChoice == Options )
+							m_eChoice = Achieve;
+						else if( m_eChoice == Achieve )
 							m_eChoice = Play;
 						break;
 					
 					case SDLK_DOWN:
 					case SDLK_2:
 						if( m_eChoice == Play )
+							m_eChoice = Achieve;
+						else if( m_eChoice == Achieve )
 							m_eChoice = Options;
 						else if( m_eChoice == Options )
 							m_eChoice = Help;
@@ -151,11 +159,23 @@ void MainMenu::UpdateDisplay()
 	}
 
 	if( m_eChoice == Play )
-		draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), 0, 7, 120, 30, 1);
+		draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), 0, 7, 120, 23, 1);
+	else if( m_eChoice == Achieve )
+		draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), 0, 29, 136, 23, 1);
 	else if( m_eChoice == Options )
-		draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), 0, 45, 96, 24, 1);
+		draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), 0, 48, 96, 24, 1);
 	if( m_eChoice == Help )
 		draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), 0, 70, 60, 25, 1);
+
+	 m_nFlashAchievement = (m_nFlashAchievement+1)%100;
+        if( m_bNewAchievement && (m_nFlashAchievement<50) ) {
+                SDL_Rect rectStar;
+                rectStar.x = 135;
+                rectStar.y = 155;
+                rectStar.w = 16;
+                rectStar.h = 16;
+                SDL_BlitSurface(m_pStar, NULL, m_pScreen, &rectStar);
+        }
 
 	SDL_UpdateRect(m_pScreen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 }

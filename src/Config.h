@@ -22,7 +22,11 @@ public:
 
    MAKE_CONFIG_ITEM(bool, SelectorMovementAnimate);
    MAKE_CONFIG_ITEM(bool, BackgroundMoves);
-   MAKE_CONFIG_ITEM(int,  CurrentLevel);
+
+//Achievements
+   MAKE_CONFIG_ITEM(int, GamesPlayed);
+   MAKE_CONFIG_ITEM(int, GamesWon);
+
 public:
    //char m_LevelData[2048];
 
