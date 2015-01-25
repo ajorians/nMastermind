@@ -15,13 +15,13 @@ Game::Game(SDL_Surface* pScreen/*, MouseHandling* pMouse*/, Config* pConfig)
 #endif
 , m_Selector(pScreen, pConfig, &m_Metrics)
 {
-	MastermindLibCreate(&m_Master, Guessing);
+	MastermindLibCreate(&m_Master, Guessing, m_pConfig->GetHoles(), m_pConfig->GetColors(), m_pConfig->GetTries());
 
 	m_pFont = nSDL_LoadFont(NSDL_FONT_THIN, 0/*R*/, 0/*G*/, 0/*B*/);
 
 	m_pBackground = nSDL_LoadImage(image_MastermindBoard);
 
-	m_Metrics.SetBoardDimensions(4, 10);
+	m_Metrics.SetBoardDimensions(m_pConfig->GetHoles(), m_pConfig->GetTries());
 }
 
 Game::~Game()
@@ -131,9 +131,9 @@ void Game::UpdateDisplay()
    SDL_BlitSurface(m_pBackground, NULL, m_pScreen, NULL);
 #endif
 
-   for(int y=0; y<10; y++) {
+   for(int y=0; y<m_pConfig->GetTries(); y++) {
       nSDL_DrawString(m_pScreen, m_pFont, m_Metrics.GetXPos(0)-20, m_Metrics.GetYPos(y)+3, "%d", y+1);
-      for(int x=0; x<4; x++) {
+      for(int x=0; x<m_pConfig->GetHoles(); x++) {
          int nPiece = GetMasterColorPeg(m_Master, y, x);
          //if( nPiece == 0 )
             //continue;
@@ -142,15 +142,33 @@ void Game::UpdateDisplay()
 
       int nRed, nWhite;
       GetMasterResult(m_Master, y, &nRed, &nWhite);
-      DrawRedWhite(m_Metrics.GetXPos(3)+m_Metrics.GetPieceSize(), m_Metrics.GetYPos(y), nRed, nWhite);
+      DrawRedWhite(m_Metrics.GetXPos(m_pConfig->GetHoles()-1)+(m_pConfig->GetHoles()==4?m_Metrics.GetPieceSize():(m_Metrics.GetPieceSize()/2)), m_Metrics.GetYPos(y), nRed, nWhite);
    }
 
-   DisplayPiece(SCREEN_WIDTH-m_Metrics.GetPieceSize()*4, SCREEN_HEIGHT-m_Metrics.GetPieceSize()*3-7, 1);
-   DisplayPiece(SCREEN_WIDTH-m_Metrics.GetPieceSize()*3, SCREEN_HEIGHT-m_Metrics.GetPieceSize()*3-7, 2);
-   DisplayPiece(SCREEN_WIDTH-m_Metrics.GetPieceSize()*2, SCREEN_HEIGHT-m_Metrics.GetPieceSize()*3-7, 3);
-   DisplayPiece(SCREEN_WIDTH-m_Metrics.GetPieceSize()*4, SCREEN_HEIGHT-m_Metrics.GetPieceSize()*2-7, 4);
-   DisplayPiece(SCREEN_WIDTH-m_Metrics.GetPieceSize()*3, SCREEN_HEIGHT-m_Metrics.GetPieceSize()*2-7, 5);
-   DisplayPiece(SCREEN_WIDTH-m_Metrics.GetPieceSize()*2, SCREEN_HEIGHT-m_Metrics.GetPieceSize()*2-7, 6);
+   int nX = SCREEN_WIDTH-m_Metrics.GetPieceSize()*4;
+   int nY = SCREEN_HEIGHT-m_Metrics.GetPieceSize()*3-7;
+   if( m_pConfig->GetColors() < 6 ) {
+      nX += m_Metrics.GetPieceSize()/2;
+   }
+   else if( m_pConfig->GetColors() > 6 ) {
+      nX -= m_Metrics.GetPieceSize()/2;
+   }
+   DisplayPiece(nX, nY, 1);
+   DisplayPiece(nX+m_Metrics.GetPieceSize(), nY, 2);
+   DisplayPiece(m_pConfig->GetColors() < 6 ? nX : (nX+m_Metrics.GetPieceSize()*2), m_pConfig->GetColors() < 6 ? (nY+m_Metrics.GetPieceSize()) : nY, 3);
+   DisplayPiece(m_pConfig->GetColors() < 6 ? (nX+m_Metrics.GetPieceSize()) : nX, nY+m_Metrics.GetPieceSize(), 4);
+   if( m_pConfig->GetColors() > 4 ) {
+      DisplayPiece(nX+m_Metrics.GetPieceSize(), nY+m_Metrics.GetPieceSize(), 5);
+   }
+   if( m_pConfig->GetColors() > 5 ) {
+      DisplayPiece(nX+m_Metrics.GetPieceSize()*2, nY+m_Metrics.GetPieceSize(), 6);
+   }
+   if( m_pConfig->GetColors() > 6 ) {
+      DisplayPiece(nX+m_Metrics.GetPieceSize()*3, nY, 7);
+   }
+   if( m_pConfig->GetColors() > 7 ) {
+      DisplayPiece(nX+m_Metrics.GetPieceSize()*3, nY+m_Metrics.GetPieceSize(), 8);
+   }
 
    if( MASTERLIB_GAME_OVER == IsMasterGameOver(m_Master) ) {
       ShowSolution();
@@ -177,7 +195,7 @@ void Game::Move(Direction eDirection)
    if( eDirection == Up ) {
       int n = GetMasterColorPeg(m_Master, m_Selector.GetCurrentY(), m_Selector.GetCurrentX());
       n++;
-      if( n > 6 )
+      if( n > m_pConfig->GetColors() )
          n = 0;
       PlaceMasterColorPeg(m_Master, m_Selector.GetCurrentX(), n);
    }
@@ -185,7 +203,7 @@ void Game::Move(Direction eDirection)
       int n = GetMasterColorPeg(m_Master, m_Selector.GetCurrentY(), m_Selector.GetCurrentX());
       n--;
       if( n < 0 )
-         n = 6;
+         n = m_pConfig->GetColors();
       PlaceMasterColorPeg(m_Master, m_Selector.GetCurrentX(), n);
    }
 }
@@ -211,15 +229,32 @@ void Game::RemoveCurrentPeg()
    PlaceMasterColorPeg(m_Master, m_Selector.GetCurrentX(), 0);
 }
 
+int Game::GetRedWhiteX(int nTotal, int nX)
+{
+   int x = nX + nTotal*10;
+   if( nTotal >= 4 && m_pConfig->GetHoles()>4 )
+      x = nX + 5 + (nTotal-3)*10;
+   return x;
+}
+
+int Game::GetRedWhiteY(int nTotal, int nY)
+{
+   int y = nY;
+   if( nTotal >= 4 && m_pConfig->GetHoles()>4 )
+      y += 10;
+   return y;
+}
+
 void Game::DrawRedWhite(int nX, int nY, int nRed, int nWhite)
 {
+   int nTotal = 0;
    for(int i=0; i<nRed; i++) {
-      filledEllipseRGBA(m_pScreen, nX+4, nY+6, 4, 4, 0, 0, 0, 255);
-      nX += 10;
+      nTotal++;
+      filledEllipseRGBA(m_pScreen, GetRedWhiteX(nTotal, nX)+4, GetRedWhiteY(nTotal, nY)+6, 4, 4, 0, 0, 0, 255);
    }
    for(int i=0; i<nWhite; i++) {
-      filledEllipseRGBA(m_pScreen, nX+4, nY+6, 4, 4, 255, 255, 255, 255);
-      nX += 10;
+      nTotal++;
+      filledEllipseRGBA(m_pScreen, GetRedWhiteX(nTotal, nX)+4, GetRedWhiteY(nTotal, nY)+6, 4, 4, 255, 255, 255, 255);
    }
 }
 
@@ -231,6 +266,8 @@ void Game::ShowSolution()
    DisplayPiece(nX+m_Metrics.GetPieceSize(), nY, GetMasterSolutionPeg(m_Master, 1));
    DisplayPiece(nX+m_Metrics.GetPieceSize()*2, nY, GetMasterSolutionPeg(m_Master, 2));
    DisplayPiece(nX+m_Metrics.GetPieceSize()*3, nY, GetMasterSolutionPeg(m_Master, 3));
+   if( m_pConfig->GetHoles() >= 5 )
+      DisplayPiece(nX+m_Metrics.GetPieceSize()*4, nY, GetMasterSolutionPeg(m_Master, 4));
 }
 
 void Game::DisplayPiece(int nX, int nY, int nPiece)
@@ -264,6 +301,14 @@ void Game::DisplayPiece(int nX, int nY, int nPiece)
 
       case 6:
          nR = 0, nG = 255, nB = 255;
+      break;
+
+      case 7:
+         nR = 255, nG = 255, nB = 255;
+      break;
+
+      case 8:
+         nR = 0, nG = 0, nB = 0;
       break;
    }
 

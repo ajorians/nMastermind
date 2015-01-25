@@ -4,7 +4,7 @@
 extern "C"
 {
 	#include <os.h>
-	//#include "ArchiveLib/ArchiveLib.h"
+	#include "ArchiveLib/ArchiveLib.h"
 }
 
 #define MAKE_CONFIG_ITEM(type, name) \
@@ -22,6 +22,9 @@ public:
 
    MAKE_CONFIG_ITEM(bool, SelectorMovementAnimate);
    MAKE_CONFIG_ITEM(bool, BackgroundMoves);
+   MAKE_CONFIG_ITEM(int, Holes);
+   MAKE_CONFIG_ITEM(int, Colors);
+   MAKE_CONFIG_ITEM(int, Tries);
 
 //Achievements
    MAKE_CONFIG_ITEM(int, GamesPlayed);
@@ -35,7 +38,7 @@ public:
    //void SetBeatLevel(int nLevelNumber, int nTimeElapsed);
 
 protected:
-   //ArchiveLib	m_Archive;
+   ArchiveLib	m_Archive;
 };
 
 #endif

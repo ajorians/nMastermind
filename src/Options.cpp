@@ -92,97 +92,87 @@ bool Options::PollEvents()
 void Options::ToggleCurrentOption()
 {
 	if( m_nOptionsIndex == 0 ) {
-		//m_pConfig->SetGameMode(!m_pConfig->GetGameMode());
+		m_pConfig->SetHoles(m_pConfig->GetHoles()==4 ? 5 : 4);
 	} else if( m_nOptionsIndex == 1 ) {
-		//m_pConfig->SetJackDiamondsAmount(m_pConfig->GetJackDiamondsAmount() == 0 ? -10 : 0);
-	} else if( m_nOptionsIndex == 2 ) {
-		//int nPointLimit = m_pConfig->GetScoreLimit();
-		//25, 50, 100, 200, 500
-		/*int nNewPoints = 100;
-		switch(nPointLimit)
+		int nNewColors = 6;
+		switch(m_pConfig->GetColors())
 		{
-			default:
-			case 100:
-				nNewPoints = 200;
-				break;
-			case 25:
-				nNewPoints = 50;
-				break;
-			case 50:
-				nNewPoints = 100;
-				break;
-			case 200:
-				nNewPoints = 500;
-				break;
-			case 500:
-				nNewPoints = 25;
-				break;
-		}
-		m_pConfig->SetScoreLimit(nNewPoints);*/
-        } else if( m_nOptionsIndex == 3 ) {
-		/*int nStep = m_pConfig->GetPieceMovePerStep();
-		int nNewStep = 7;
-		switch(nStep) {
-			default:
-			case 7:
-				nNewStep = 11;
-				break;
-			case 11:
-				nNewStep = 4;
-				break;
 			case 4:
-				nNewStep = 7;
-				break;
+				nNewColors = 5;
+			break;
+
+			case 5:
+				nNewColors = 6;
+			break;
+
+			default:
+			case 6:
+				nNewColors = 7;
+			break;
+
+			case 7:
+				nNewColors = 8;
+			break;
+
+			case 8:
+				nNewColors = 4;
+			break;
 		}
-		m_pConfig->SetPieceMovePerStep(nNewStep);*/
-	}
+		m_pConfig->SetColors(nNewColors);
+	} else if( m_nOptionsIndex == 2 ) {
+		m_pConfig->SetTries(m_pConfig->GetTries() == 10 ? 12 : 10);
+        }
 }
 
 void Options::Move(Option_Direction eDirection)
 {
-	if( eDirection == OP_Down && m_nOptionsIndex < 3 ) {
+	if( eDirection == OP_Down && m_nOptionsIndex < 2 ) {
 		m_nOptionsIndex++;
 	} else if( eDirection == OP_Up && m_nOptionsIndex > 0 ) {
 		m_nOptionsIndex--;
 	}
 }
 
-#define GAME_MODE_Y	     (45)
-#define JACK_DIAMONDS_Y      (105)
-#define POINT_LIMIT_Y	     (125)
-#define GAME_SPEED_Y	     (155)
+#define HOLES_Y	      (45)
+#define COLORS_Y      (65)
+#define TRIES_Y	      (85)
 void Options::UpdateDisplay()
 {
 	//Draw background
 	SDL_FillRect(m_pScreen, NULL, SDL_MapRGB(m_pScreen->format, 153, 153, 255));
-	/*nSDL_DrawString(m_pScreen, m_pFont, (SCREEN_WIDTH-nSDL_GetStringWidth(m_pFont, "Options:"))/2, 15, "Options:");
+	nSDL_DrawString(m_pScreen, m_pFont, (SCREEN_WIDTH-nSDL_GetStringWidth(m_pFont, "Options:"))/2, 15, "Options:");
 
-	if( m_pConfig->GetGameMode() == 1 ) {
-		nSDL_DrawString(m_pScreen, m_pFont, 12, GAME_MODE_Y, "Game mode: 3 Player");
-                nSDL_DrawString(m_pScreen, m_pFont, 12, GAME_MODE_Y+12, 
-"3 player mode where each player gets 17\n\
-cards.  There is a mystery card in that the\n\
-first player to take a trick gets.  It won't\n\
-break hearts though.");
-	} else {
-		nSDL_DrawString(m_pScreen, m_pFont, 12, GAME_MODE_Y, "Game mode: Normal");
-                nSDL_DrawString(m_pScreen, m_pFont, 12, GAME_MODE_Y+12, 
-"Normal 4 player game where each player\n\
-starts with 13 cards.");
-	}
+	nSDL_DrawString(m_pScreen, m_pFont, 12, HOLES_Y, "Number of holes: %d", m_pConfig->GetHoles());
 
 	if( m_nOptionsIndex == 0 ) {
                 if( is_classic ) {
-                        draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 255, 255), 7, GAME_MODE_Y-5, 312, 59, 1);
+                        draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 255, 255), 7, HOLES_Y-5, 312, 25, 1);
                 } else {
-                        draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), 7, GAME_MODE_Y-5, 312, 59, 1);
+                        draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), 7, HOLES_Y-5, 312, 25, 1);
                 }
-        }*/
+        }
 
-	//char buffer[256] = "Jack of Diamonds is -10 points: ";
+	nSDL_DrawString(m_pScreen, m_pFont, 12, COLORS_Y, "Number of colors: %d", m_pConfig->GetColors());
+
+	if( m_nOptionsIndex == 1 ) {
+                if( is_classic ) {
+                        draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 255, 255), 7, COLORS_Y-5, 312, 25, 1);
+                } else {
+                        draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), 7, COLORS_Y-5, 312, 25, 1);
+                }
+        }
+
+	nSDL_DrawString(m_pScreen, m_pFont, 12, TRIES_Y, "Number of tries: %d", m_pConfig->GetTries());
+
+	if( m_nOptionsIndex == 2 ) {
+                if( is_classic ) {
+                        draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 255, 255), 7, TRIES_Y-5, 312, 25, 1);
+                } else {
+                        draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), 7, TRIES_Y-5, 312, 25, 1);
+                }
+        }
 
 	SDL_UpdateRect(m_pScreen, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-
 }
 
 

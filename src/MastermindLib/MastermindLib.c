@@ -11,7 +11,7 @@
 
 struct MastermindRow
 {
-  int m_aGuessSpots[4];
+  int m_aGuessSpots[5];
   short m_nNumRed;
   short m_nNumWhite;
 };
@@ -26,13 +26,16 @@ struct Mastermind
 {
    int m_nLastError;
    PlayMode m_eMode;
-   struct MastermindRow m_aRows[10];
+   int m_nHoles;
+   int m_nColors;
+   int m_nTries;
+   struct MastermindRow* m_paRows;
    int m_nCurrentRow;
-   int m_aAnswer[4];
+   int m_aAnswer[5];
    GameState m_eState;
 };
 
-int MastermindLibCreate(MasterLib* api, PlayMode eMode)
+int MastermindLibCreate(MasterLib* api, PlayMode eMode, int nHoles, int nColors, int nTries)
 {
    struct Mastermind* pM;
    int i,j;
@@ -44,18 +47,27 @@ int MastermindLibCreate(MasterLib* api, PlayMode eMode)
    }
 
    pM->m_eMode = eMode;
+   pM->m_nHoles = nHoles;
+   pM->m_nColors = nColors;
+   pM->m_nTries = nTries;
+   pM->m_paRows = malloc(nTries*sizeof(struct MastermindRow));
+   if( pM->m_paRows == NULL ){//Out of memory
+      free(pM);
+      return MASTERLIB_OUT_OF_MEMORY;
+   }
    pM->m_nCurrentRow = 0;
-   for(i=0; i<10; i++)
-     for(j=0; j<4; j++) {
-       pM->m_aRows[i].m_aGuessSpots[j] = 0;
-         pM->m_aRows[i].m_nNumRed = pM->m_aRows[i].m_nNumWhite = 0;
+   for(i=0; i<nTries; i++)
+     for(j=0; j<5; j++) {
+       pM->m_paRows[i].m_aGuessSpots[j] = 0;
+         pM->m_paRows[i].m_nNumRed = pM->m_paRows[i].m_nNumWhite = 0;
       }
      
    if( pM->m_eMode == Guessing ) {
-     pM->m_aAnswer[0] = (rand() % 5) + 1;
-     pM->m_aAnswer[1] = (rand() % 5) + 1;
-     pM->m_aAnswer[2] = (rand() % 5) + 1;
-     pM->m_aAnswer[3] = (rand() % 5) + 1;
+     pM->m_aAnswer[0] = (rand() % nColors) + 1;
+     pM->m_aAnswer[1] = (rand() % nColors) + 1;
+     pM->m_aAnswer[2] = (rand() % nColors) + 1;
+     pM->m_aAnswer[3] = (rand() % nColors) + 1;
+     pM->m_aAnswer[4] = (rand() % nColors) + 1;
      printf("Solution: %d, %d, %d, %d\n", pM->m_aAnswer[0], pM->m_aAnswer[1], pM->m_aAnswer[2], pM->m_aAnswer[3]);
    }
    pM->m_eState = GamePlaying;
@@ -91,6 +103,7 @@ int MastermindLibFree(MasterLib* api)
    DEBUG_FUNC_NAME;
 
    pM = *api;
+   free(pM->m_paRows);
 
    free(pM);
    *api = NULL;
@@ -130,6 +143,8 @@ int SetMasterCreatorAnswer(MasterLib api, int nCount, int arrValues[])
    pM->m_aAnswer[1] = arrValues[1];
    pM->m_aAnswer[2] = arrValues[2];
    pM->m_aAnswer[3] = arrValues[3];
+   if( nCount >= 5 )
+      pM->m_aAnswer[4] = arrValues[4];
    
   return MASTERLIB_OK;
 }
@@ -141,7 +156,7 @@ int GetMasterColorPeg(MasterLib api, int nRow, int nCol)
 
    pM = (struct Mastermind*)api;
 
-   return pM->m_aRows[nRow].m_aGuessSpots[nCol];
+   return pM->m_paRows[nRow].m_aGuessSpots[nCol];
 }
 
 int GetMasterResult(MasterLib api, int nRow, int* pnRed, int* pnWhite)
@@ -151,8 +166,8 @@ int GetMasterResult(MasterLib api, int nRow, int* pnRed, int* pnWhite)
 
    pM = (struct Mastermind*)api;
 
-   if( pnRed ) *pnRed = pM->m_aRows[nRow].m_nNumRed;
-   if( pnWhite ) *pnWhite = pM->m_aRows[nRow].m_nNumWhite;
+   if( pnRed ) *pnRed = pM->m_paRows[nRow].m_nNumRed;
+   if( pnWhite ) *pnWhite = pM->m_paRows[nRow].m_nNumWhite;
 
    return MASTERLIB_OK;
 }
@@ -169,13 +184,13 @@ int PlaceMasterColorPeg(MasterLib api, int nSpot, int nColor)
 
    //printf("row: %d, spot: %d with color %d\n", pM->m_nCurrentRow, nSpot, nColor);
    
-   if( nSpot < 0 || nSpot > 3 )
+   if( nSpot < 0 || nSpot > (pM->m_nHoles-1) )
      return MASTERLIB_BADARGUMENT;
    
-   if( nColor < 0 | nColor > 6 )//0 is ok and hard coded 6 for now
+   if( nColor < 0 | nColor > pM->m_nColors )
      return MASTERLIB_BADARGUMENT;
    
-   pM->m_aRows[pM->m_nCurrentRow].m_aGuessSpots[nSpot] = nColor;
+   pM->m_paRows[pM->m_nCurrentRow].m_aGuessSpots[nSpot] = nColor;
    
    return MASTERLIB_OK;
 }
@@ -194,22 +209,22 @@ int TakeMasterGuess(MasterLib api, int* pnReds, int* pnWhites)
    
    nReds = 0, nWhites = 0;
    
-   for(i=0; i<4; i++)
-     if( pM->m_aRows[pM->m_nCurrentRow].m_aGuessSpots[i] == 0 )
+   for(i=0; i<pM->m_nHoles; i++)
+     if( pM->m_paRows[pM->m_nCurrentRow].m_aGuessSpots[i] == 0 )
        return MASTERLIB_NOT_FILLED_YET;
      
-   int arrCounted[] = { 0,0,0,0 };
+   int arrCounted[] = { 0,0,0,0,0 };
    //Look for Red & White pegs
-   for(i=0; i<4; i++) {
-      if( pM->m_aRows[pM->m_nCurrentRow].m_aGuessSpots[i] == pM->m_aAnswer[i] ) {
+   for(i=0; i<pM->m_nHoles; i++) {
+      if( pM->m_paRows[pM->m_nCurrentRow].m_aGuessSpots[i] == pM->m_aAnswer[i] ) {
          nReds++;
          arrCounted[i] = 1;
       }
       else {
-         for(j=0; j<4; j++) {
+         for(j=0; j<pM->m_nHoles; j++) {
             if( i == j )
                continue;
-            if( pM->m_aRows[pM->m_nCurrentRow].m_aGuessSpots[j] != pM->m_aAnswer[j] && pM->m_aRows[pM->m_nCurrentRow].m_aGuessSpots[j] == pM->m_aAnswer[i] && arrCounted[j] == 0 ) {
+            if( pM->m_paRows[pM->m_nCurrentRow].m_aGuessSpots[j] != pM->m_aAnswer[j] && pM->m_paRows[pM->m_nCurrentRow].m_aGuessSpots[j] == pM->m_aAnswer[i] && arrCounted[j] == 0 ) {
                arrCounted[j] = 1;
                nWhites++;
                break;
@@ -219,14 +234,14 @@ int TakeMasterGuess(MasterLib api, int* pnReds, int* pnWhites)
    }
    printf("Reds: %d, Whites: %d\n", nReds, nWhites);
    
-   pM->m_aRows[pM->m_nCurrentRow].m_nNumRed = nReds;
-   pM->m_aRows[pM->m_nCurrentRow].m_nNumWhite = nWhites;
+   pM->m_paRows[pM->m_nCurrentRow].m_nNumRed = nReds;
+   pM->m_paRows[pM->m_nCurrentRow].m_nNumWhite = nWhites;
  
    pM->m_nCurrentRow++;
 
-   if( nReds == 4 )
+   if( nReds == pM->m_nHoles )
       pM->m_eState = GameWon;
-   else if( pM->m_nCurrentRow >= 10 )
+   else if( pM->m_nCurrentRow >= pM->m_nTries )
       pM->m_eState = GameLost;
    
    if( pnReds ) *pnReds = nReds;
@@ -270,7 +285,7 @@ int GetMasterSolutionPeg(MasterLib api, int nSpot)
 
    pM = (struct Mastermind*)api;
 
-   if( nSpot < 0 || nSpot > 3 )
+   if( nSpot < 0 || nSpot > (pM->m_nHoles-1) )
       return MASTERLIB_BADARGUMENT;
 
    return pM->m_aAnswer[nSpot];

@@ -24,7 +24,7 @@ typedef enum {
 //////////////////////////////////////////////
 //Initalization/Error checking/Mode functions
 //////////////////////////////////////////////
-int MastermindLibCreate(MasterLib* api, PlayMode eMode);
+int MastermindLibCreate(MasterLib* api, PlayMode eMode, int nHoles, int nColors, int nTries);
 //int MastermindLibCopy(MasterLib* copyapi, MasterLib orig);
 int MastermindLibFree(MasterLib* api);
 

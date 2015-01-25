@@ -1,7 +1,7 @@
 GCC = nspire-g++
 LD = nspire-ld
 GCCFLAGS = -Os -Wall -W -marm -Wno-unused-parameter -I include
-LDFLAGS = -L lib -lndls -lMastermind
+LDFLAGS = -L lib -lndls -lMastermind -lArchive
 OBJCOPY := "$(shell which arm-elf-objcopy 2>/dev/null)"
 ifeq (${OBJCOPY},"")
 	OBJCOPY := arm-none-eabi-objcopy
@@ -12,7 +12,8 @@ vpath %.tns $(DISTDIR)
 
 all:	prepare $(EXE)
 
-prepare:        
+prepare:
+	cd ArchiveLib; make; cd ..
 	cd MastermindLib; make; cd ..
 
 %.o: %.cpp
@@ -23,6 +24,7 @@ $(EXE): $(OBJS)
 	$(OBJCOPY) -O binary $(@:.tns=.elf) $@
 
 clean:
+	cd ArchiveLib; make clean
 	cd MastermindLib; make clean
 	rm -rf lib
 	rm -f *.o *.elf

@@ -34,6 +34,8 @@ protected:
 	void Move(Direction eDirection);
 	void EvaluatePegs();
 	void RemoveCurrentPeg();
+	int GetRedWhiteX(int nTotal, int nX);
+	int GetRedWhiteY(int nTotal, int nY);
         void DrawRedWhite(int nX, int nY, int nRed, int nWhite);
 	void ShowSolution();
 

@@ -3,6 +3,9 @@
 
 #define SELECTOR_ANIMATE_DEFAULT        (true)
 #define BACKGROUND_MOVES_DEFAULT	(true)
+#define HOLES_DEFAULT			(4)
+#define COLORS_DEFAULT			(6)
+#define TRIES_DEFAULT			(10)
 
 #define GAMES_PLAYED_DEFAULT            (0)
 #define GAMES_WON_DEFAULT               (0)
@@ -23,7 +26,7 @@
    m_##identifier = atoi( GetValue(m_Archive, "Settings", i));\
 }
 
-#define WRITE_INT_CONFIG_VAR(identifier) Puz_itoa(m_##identifier, buffer, 8);\
+#define WRITE_INT_CONFIG_VAR(identifier) sprintf(buffer, "%d", m_##identifier);\
    UpdateArchiveEntry(m_Archive, "Settings", STRINGIFY_CONFIG_ITEM(Use##identifier), buffer, NULL);
 
 #define READ_STRING_CONFIG_VAR(identifier) if( strcmp(strName, STRINGIFY_CONFIG_ITEM(Current##identifier) ) == 0 ) {\
@@ -34,11 +37,14 @@
 
 Config::Config()
 : m_SelectorMovementAnimate(SELECTOR_ANIMATE_DEFAULT), 
-m_BackgroundMoves(BACKGROUND_MOVES_DEFAULT), 
+m_BackgroundMoves(BACKGROUND_MOVES_DEFAULT),
+m_Holes(HOLES_DEFAULT),
+m_Colors(COLORS_DEFAULT),
+m_Tries(TRIES_DEFAULT), 
 m_GamesPlayed(GAMES_PLAYED_DEFAULT),
 m_GamesWon(GAMES_WON_DEFAULT)
 {
-   /*ArchiveCreate(&m_Archive);
+   ArchiveCreate(&m_Archive);
 
    OpenArchiveFile(m_Archive, "MastermindSettings.tns");
 
@@ -49,22 +55,38 @@ m_GamesWon(GAMES_WON_DEFAULT)
 
       READ_BOOL_CONFIG_VAR(SelectorMovementAnimate);
       READ_BOOL_CONFIG_VAR(BackgroundMoves);
-      READ_INT_CONFIG_VAR(CurrentLevel);
-      READ_STRING_CONFIG_VAR(LevelData);
-   }*/
+      //READ_INT_CONFIG_VAR(CurrentLevel);
+      //READ_STRING_CONFIG_VAR(LevelData);
+      READ_INT_CONFIG_VAR(Holes);
+      READ_INT_CONFIG_VAR(Colors);
+      READ_INT_CONFIG_VAR(Tries);
+
+//Achievements
+      READ_INT_CONFIG_VAR(GamesPlayed);
+      READ_INT_CONFIG_VAR(GamesWon);
+   }
 }
 
 Config::~Config()
 {
-   /*ArchiveSetBatchMode(m_Archive, ARCHIVE_ENABLE_BATCH);
+   char buffer[8];
+   ArchiveSetBatchMode(m_Archive, ARCHIVE_ENABLE_BATCH);
    WRITE_BOOL_CONFIG_VAR(SelectorMovementAnimate);
    WRITE_BOOL_CONFIG_VAR(BackgroundMoves);
-   char buffer[8];
-   WRITE_INT_CONFIG_VAR(CurrentLevel);
-   WRITE_STRING_CONFIG_VAR(LevelData);
+   //char buffer[8];
+   //WRITE_INT_CONFIG_VAR(CurrentLevel);
+   //WRITE_STRING_CONFIG_VAR(LevelData);
+   WRITE_INT_CONFIG_VAR(Holes);
+   WRITE_INT_CONFIG_VAR(Colors);
+   WRITE_INT_CONFIG_VAR(Tries);
+
+//Achievements
+   WRITE_INT_CONFIG_VAR(GamesPlayed);
+   WRITE_INT_CONFIG_VAR(GamesWon);
+
    ArchiveSetBatchMode(m_Archive, ARCHIVE_DISABLE_BATCH);
 
-   ArchiveFree(&m_Archive);*/
+   ArchiveFree(&m_Archive);
 }
 
 
