@@ -11,10 +11,6 @@ extern "C"
 #define DEBUG_MSG//     printf
 #endif
 
-#define GAME_BACKGROUND_R       (153)
-#define GAME_BACKGROUND_G       (153)
-#define GAME_BACKGROUND_B       (102)
-
 #define MESSAGE_TEXT_R           (107)
 #define MESSAGE_TEXT_G           (107)
 #define MESSAGE_TEXT_B           (71)

@@ -5,8 +5,8 @@
 //#include "OptionsHelpGraphic.h"
 #include "Defines.h"
 
-MainMenu::MainMenu(SDL_Surface* pScreen/*, Config* pConfig, MouseHandling* pMouseHandling*/)
-: m_pScreen(pScreen), /*m_pMouseHandling(pMouseHandling),*/ m_Background(pScreen/*, pConfig*/), m_eChoice(Play)/*, m_pConfig(pConfig)*/
+MainMenu::MainMenu(SDL_Surface* pScreen, Config* pConfig/*, MouseHandling* pMouseHandling*/)
+: m_pScreen(pScreen), /*m_pMouseHandling(pMouseHandling),*/ m_Background(pScreen/*, pConfig*/), m_eChoice(Play), m_pConfig(pConfig)
 {
 	//m_pTitleGraphic 	= nSDL_LoadImage(image_nHeartsText);
 	m_pPlayGraphic		= nSDL_LoadImage(image_Play);

@@ -232,6 +232,49 @@ int TestGuessing2()
    return TEST_SUCCEEDED;
 }
 
+int TestGuessing3()
+{
+   MasterLib api;
+   int i;
+   int nReds, nWhites;
+   PRINT_FUNC;
+
+   nReds = 0, nWhites = 0;
+
+   if( MASTERLIB_OK != MastermindLibCreate(&api, Creator) )
+      return TEST_FAILED;
+
+   int arrAnswer[] = {5,2,1,2};
+   if( MASTERLIB_OK != SetMasterCreatorAnswer(api, 4, arrAnswer) )
+      return TEST_FAILED;
+
+   if( MASTERLIB_OK == TakeMasterGuess(api, &nReds, &nWhites) )//Can't take guess until laid out pegs
+         return TEST_FAILED;
+
+   if( MASTERLIB_OK != PlaceMasterColorPeg(api, 0, 1) )
+         return TEST_FAILED;
+   if( MASTERLIB_OK != PlaceMasterColorPeg(api, 1, 1) )
+         return TEST_FAILED;
+   if( MASTERLIB_OK != PlaceMasterColorPeg(api, 2, 2) )
+         return TEST_FAILED;
+   if( MASTERLIB_OK != PlaceMasterColorPeg(api, 3, 5) )
+         return TEST_FAILED;
+
+   if( MASTERLIB_OK != TakeMasterGuess(api, &nReds, &nWhites) )
+         return TEST_FAILED;
+
+   if( nReds != 0 )
+      return TEST_FAILED;
+
+   if( nWhites != 3 )
+      return TEST_FAILED;
+
+   if( MASTERLIB_OK != MastermindLibFree(&api) )
+      return TEST_FAILED;
+
+   return TEST_SUCCEEDED;
+}
+
 typedef int (*testfunc)();
    testfunc g_Tests[] =
    {
@@ -240,7 +283,8 @@ typedef int (*testfunc)();
       TestCreate,
       TestPlacePegs,
       TestGuessing1,
-      TestGuessing2
+      TestGuessing2,
+      TestGuessing3
    };
 
 void RunTests()

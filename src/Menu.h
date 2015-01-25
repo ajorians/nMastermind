@@ -8,14 +8,14 @@ extern "C"
 }
 
 #include "Background.h"
-//#include "Config.h"
+#include "Config.h"
 
 //class MouseHandling;
 
 class MainMenu
 {
 public:
-	MainMenu(SDL_Surface* pScreen/*, Config* pConfig, MouseHandling* pMouseHandling*/);
+	MainMenu(SDL_Surface* pScreen, Config* pConfig/*, MouseHandling* pMouseHandling*/);
 	~MainMenu();
 
 	bool Loop();
@@ -38,7 +38,7 @@ protected:
 	nSDL_Font 	*m_pFont;
 	enum MenuChoice{Play, Options, Help, Quit};
 	MenuChoice 	m_eChoice;
-	//Config		*m_pConfig;
+	Config		*m_pConfig;
 };
 
 #endif

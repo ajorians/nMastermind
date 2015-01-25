@@ -32,8 +32,11 @@ void ClearMasterLibError(MasterLib api);
 //MasterLib related functions
 //////////////////////////////////////////////
 int SetMasterCreatorAnswer(MasterLib api, int nCount, int arrValues[]);
+int GetMasterColorPeg(MasterLib, int nRow, int nCol);
+int GetMasterResult(MasterLib api, int nRow, int* pnRed, int* pnWhite);
 int PlaceMasterColorPeg(MasterLib, int nSpot, int nColor);
 int TakeMasterGuess(MasterLib api, int* pnReds, int* pnWhites);
 int IsMasterGameOver(MasterLib api);
+int GetMasterSolutionPeg(MasterLib api, int nSpot);
 
 #endif

@@ -5,7 +5,8 @@ extern "C"
 }
 
 #include "Menu.h"
-//#include "Game.h"
+#include "Game.h"
+#include "Config.h"
 //#include "MouseHandling.h"
 //#include "Help.h"
 
@@ -30,7 +31,7 @@ int main(int argc, char *argv[])
 	pScreen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BIT_DEPTH, SCREEN_VIDEO_MODE);
 
 	//ArchiveSetCurrentDirectory(argv[0]);
-	//Config config;
+	Config config;
 	//MouseHandling mouse(&config);
 	//AchieveConfig ac(&config);
 
@@ -51,7 +52,7 @@ int main(int argc, char *argv[])
 
 			if( argc != 2 )
 			{
-				MainMenu menu(pScreen/*, &config, &mouse*/);
+				MainMenu menu(pScreen, &config/*, &mouse*/);
 				while(menu.Loop()){}
 				if( menu.ShouldQuit() )
 					break;
@@ -72,14 +73,14 @@ int main(int argc, char *argv[])
 			}
 			else
 			{
-				//bool bPlay = true;
-				//while( bPlay ) {
-					//Game game(pScreen, &mouse, &config, &ac, &cardImages);
-					//while(game.Loop()){}
+				bool bPlay = true;
+				while( bPlay ) {
+					Game game(pScreen/*, &mouse*/, &config);
+					while(game.Loop()){}
 
-					//bPlay = false;
-					//break;
-				//}
+					bPlay = false;
+					break;
+				}
 			}
 		}
 	}
