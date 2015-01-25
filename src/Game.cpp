@@ -147,7 +147,7 @@ void Game::UpdateDisplay()
 
    int nX = SCREEN_WIDTH-m_Metrics.GetPieceSize()*4;
    int nY = SCREEN_HEIGHT-m_Metrics.GetPieceSize()*3-7;
-   if( m_pConfig->GetColors() < 6 ) {
+   if( m_pConfig->GetColors() < 5 ) {
       nX += m_Metrics.GetPieceSize()/2;
    }
    else if( m_pConfig->GetColors() > 6 ) {
@@ -155,8 +155,8 @@ void Game::UpdateDisplay()
    }
    DisplayPiece(nX, nY, 1);
    DisplayPiece(nX+m_Metrics.GetPieceSize(), nY, 2);
-   DisplayPiece(m_pConfig->GetColors() < 6 ? nX : (nX+m_Metrics.GetPieceSize()*2), m_pConfig->GetColors() < 6 ? (nY+m_Metrics.GetPieceSize()) : nY, 3);
-   DisplayPiece(m_pConfig->GetColors() < 6 ? (nX+m_Metrics.GetPieceSize()) : nX, nY+m_Metrics.GetPieceSize(), 4);
+   DisplayPiece(m_pConfig->GetColors() < 5 ? nX : (nX+m_Metrics.GetPieceSize()*2), m_pConfig->GetColors() < 5 ? (nY+m_Metrics.GetPieceSize()) : nY, 3);
+   DisplayPiece(m_pConfig->GetColors() < 5 ? (nX+m_Metrics.GetPieceSize()) : nX, nY+m_Metrics.GetPieceSize(), 4);
    if( m_pConfig->GetColors() > 4 ) {
       DisplayPiece(nX+m_Metrics.GetPieceSize(), nY+m_Metrics.GetPieceSize(), 5);
    }
