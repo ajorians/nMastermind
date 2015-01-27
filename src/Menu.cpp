@@ -159,9 +159,9 @@ void MainMenu::UpdateDisplay()
 	}
 
 	if( m_eChoice == Play )
-		draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), 0, 7, 120, 23, 1);
+		draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), 0, 7, 60, 23, 1);
 	else if( m_eChoice == Achieve )
-		draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), 0, 29, 136, 23, 1);
+		draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), 0, 29, 142, 23, 1);
 	else if( m_eChoice == Options )
 		draw_rectangle(m_pScreen, SDL_MapRGB(m_pScreen->format, 255, 0, 0), 0, 48, 96, 24, 1);
 	if( m_eChoice == Help )
@@ -170,8 +170,8 @@ void MainMenu::UpdateDisplay()
 	 m_nFlashAchievement = (m_nFlashAchievement+1)%100;
         if( m_bNewAchievement && (m_nFlashAchievement<50) ) {
                 SDL_Rect rectStar;
-                rectStar.x = 135;
-                rectStar.y = 155;
+                rectStar.x = 141;
+                rectStar.y = 29;
                 rectStar.w = 16;
                 rectStar.h = 16;
                 SDL_BlitSurface(m_pStar, NULL, m_pScreen, &rectStar);

@@ -31,9 +31,8 @@ int g_nRelocatedGlobals = 0;
 int TestConstruction()
 {
    MasterLib api;
-   int i;
    PRINT_FUNC;
-   if( MASTERLIB_OK != MastermindLibCreate(&api, Guessing) )
+   if( MASTERLIB_OK != MastermindLibCreate(&api, Guessing, 4, 6, 10) )
       return TEST_FAILED;
 
    if( MASTERLIB_OK != MastermindLibFree(&api) )
@@ -66,9 +65,8 @@ int TestConstruction()
 int TestCreate()
 {
    MasterLib api;
-   int i;
    PRINT_FUNC;
-   if( MASTERLIB_OK != MastermindLibCreate(&api, Creator) )
+   if( MASTERLIB_OK != MastermindLibCreate(&api, Creator, 4, 6, 10) )
       return TEST_FAILED;
    
    int arrAnswer[] = {1,2,3,4};
@@ -86,7 +84,7 @@ int TestPlacePegs()
    MasterLib api;
    int i;
    PRINT_FUNC;
-   if( MASTERLIB_OK != MastermindLibCreate(&api, Creator) )
+   if( MASTERLIB_OK != MastermindLibCreate(&api, Creator, 4, 6, 10) )
       return TEST_FAILED;
    
    int arrAnswer[] = {1,2,3,4};
@@ -110,13 +108,12 @@ int TestPlacePegs()
 int TestGuessing1()
 {
    MasterLib api;
-   int i;
    int nReds, nWhites;
    PRINT_FUNC;
    
    nReds = 0, nWhites = 0;
    
-   if( MASTERLIB_OK != MastermindLibCreate(&api, Creator) )
+   if( MASTERLIB_OK != MastermindLibCreate(&api, Creator, 4, 6, 10) )
       return TEST_FAILED;
    
    int arrAnswer[] = {1,2,3,4};
@@ -192,13 +189,12 @@ int TestGuessing1()
 int TestGuessing2()
 {
    MasterLib api;
-   int i;
    int nReds, nWhites;
    PRINT_FUNC;
    
    nReds = 0, nWhites = 0;
    
-   if( MASTERLIB_OK != MastermindLibCreate(&api, Creator) )
+   if( MASTERLIB_OK != MastermindLibCreate(&api, Creator, 4, 6, 10) )
       return TEST_FAILED;
    
    int arrAnswer[] = {1,3,3,4};
@@ -235,13 +231,12 @@ int TestGuessing2()
 int TestGuessing3()
 {
    MasterLib api;
-   int i;
    int nReds, nWhites;
    PRINT_FUNC;
 
    nReds = 0, nWhites = 0;
 
-   if( MASTERLIB_OK != MastermindLibCreate(&api, Creator) )
+   if( MASTERLIB_OK != MastermindLibCreate(&api, Creator, 4, 6, 10) )
       return TEST_FAILED;
 
    int arrAnswer[] = {5,2,1,2};
