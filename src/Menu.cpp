@@ -1,12 +1,12 @@
 #include "Menu.h"
-//#include "MouseHandling.h"
+#include "MouseHandling.h"
 #include "PlayGraphic.h"
 #include "AchieveConfig.h"
 #include "StarGraphic.h"
 #include "Defines.h"
 
-MainMenu::MainMenu(SDL_Surface* pScreen, Config* pConfig, AchieveConfig* pAchieve/*, MouseHandling* pMouseHandling*/)
-: m_pScreen(pScreen), /*m_pMouseHandling(pMouseHandling),*/ m_Background(pScreen/*, pConfig*/), m_eChoice(Play), m_pConfig(pConfig), m_pAchieve(pAchieve), m_nFlashAchievement(0)
+MainMenu::MainMenu(SDL_Surface* pScreen, Config* pConfig, AchieveConfig* pAchieve, MouseHandling* pMouseHandling)
+: m_pScreen(pScreen), m_pMouseHandling(pMouseHandling), m_Background(pScreen/*, pConfig*/), m_eChoice(Play), m_pConfig(pConfig), m_pAchieve(pAchieve), m_nFlashAchievement(0)
 {
 	m_pPlayGraphic		= nSDL_LoadImage(image_MenuGray);
 	m_pStar                 = nSDL_LoadImage(image_Star);
@@ -126,13 +126,13 @@ bool MainMenu::PollEvents()
 		}
 	}
 
-	/*int nMX = -1, nMY = -1;
+	int nMX = -1, nMY = -1;
 	if( m_pMouseHandling->PollMouse(nMX, nMY) ) {
 		MouseButton eMouseButton = m_pMouseHandling->GetMouseButton();
 		if( eMouseButton == CenterButton ) {
 			return false;
 		}
-	}*/
+	}
 
 	return true;
 }
@@ -142,11 +142,11 @@ void MainMenu::UpdateDisplay()
 	//Draw background
 	if( is_classic ) {
 		SDL_FillRect(m_pScreen, NULL, SDL_MapRGB(m_pScreen->format, 255, 255, 255));
-		nSDL_DrawString(m_pScreen, m_pFont, SCREEN_WIDTH/2-30, 15, "nHearts");
-		nSDL_DrawString(m_pScreen, m_pFont, SCREEN_WIDTH/2-30, 75, "Play");
-		nSDL_DrawString(m_pScreen, m_pFont, SCREEN_WIDTH/2-30, 162, "Achievements");
-		nSDL_DrawString(m_pScreen, m_pFont, SCREEN_WIDTH/2-30, 182, "Options");
-		nSDL_DrawString(m_pScreen, m_pFont, SCREEN_WIDTH/2-30, 205, "Help");
+		nSDL_DrawString(m_pScreen, m_pFont, SCREEN_WIDTH/2-30, 15, "nMastermind");
+		nSDL_DrawString(m_pScreen, m_pFont, 10, 10, "Play");
+		nSDL_DrawString(m_pScreen, m_pFont, 10, 35, "Achievements");
+		nSDL_DrawString(m_pScreen, m_pFont, 10, 52, "Options");
+		nSDL_DrawString(m_pScreen, m_pFont, 10, 74, "Help");
 	} else {
 		m_Background.DrawBackground();
 

@@ -9,14 +9,14 @@ extern "C"
 
 #include "Config.h"
 
-//class MouseHandling;
+class MouseHandling;
 
 enum Option_Direction{OP_Up, OP_Down};
 
 class Options
 {
 public:
-	Options(SDL_Surface* pScreen/*, MouseHandling* pMouse*/, Config* pConfig);
+	Options(SDL_Surface* pScreen, MouseHandling* pMouse, Config* pConfig);
 	~Options();
 
 	bool Loop();
@@ -29,7 +29,7 @@ protected:
 
 protected:
 	SDL_Surface	*m_pScreen;//Does not own
-	//MouseHandling	*m_pMouse;//Does not own
+	MouseHandling	*m_pMouse;//Does not own
 	int		m_nOptionsIndex;
 	nSDL_Font	*m_pFont;
 	Config		*m_pConfig;

@@ -1,9 +1,9 @@
 #include "Options.h"
-//#include "MouseHandling.h"
+#include "MouseHandling.h"
 #include "Defines.h"
 
-Options::Options(SDL_Surface* pScreen/*, MouseHandling* pMouse*/, Config* pConfig)
-: m_pScreen(pScreen)/*, m_pMouse(pMouse)*/, m_nOptionsIndex(0), m_pConfig(pConfig)
+Options::Options(SDL_Surface* pScreen, MouseHandling* pMouse, Config* pConfig)
+: m_pScreen(pScreen), m_pMouse(pMouse), m_nOptionsIndex(0), m_pConfig(pConfig)
 {
 	m_pFont = nSDL_LoadFont(NSDL_FONT_TINYTYPE, 0, 0, 0);
 	nSDL_SetFontSpacing(m_pFont, 0, 2);
@@ -78,13 +78,13 @@ bool Options::PollEvents()
 		}
 	}
 
-	/*int nMX = -1, nMY = -1;
+	int nMX = -1, nMY = -1;
         if( m_pMouse->PollMouse(nMX, nMY) ) {
                 MouseButton eMouseButton = m_pMouse->GetMouseButton();
                 if( eMouseButton == CenterButton ) {
 			ToggleCurrentOption();
                 }
-	}*/
+	}
 
 	return true;
 }

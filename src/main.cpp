@@ -7,7 +7,7 @@ extern "C"
 #include "Menu.h"
 #include "Game.h"
 #include "Config.h"
-//#include "MouseHandling.h"
+#include "MouseHandling.h"
 #include "AchieveConfig.h"
 #include "Achievements.h"
 #include "Options.h"
@@ -33,9 +33,9 @@ int main(int argc, char *argv[])
 	SDL_Surface* pScreen = NULL;
 	pScreen = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BIT_DEPTH, SCREEN_VIDEO_MODE);
 
-	//ArchiveSetCurrentDirectory(argv[0]);
+	ArchiveSetCurrentDirectory(argv[0]);
 	Config config;
-	//MouseHandling mouse(&config);
+	MouseHandling mouse(&config);
 	AchieveConfig ac(&config);
 
 	if( pScreen == NULL )
@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 
 			if( argc != 2 )
 			{
-				MainMenu menu(pScreen, &config/*, &mouse*/, &ac);
+				MainMenu menu(pScreen, &config, &ac, &mouse);
 				while(menu.Loop()){}
 				if( menu.ShouldQuit() )
 					break;
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
 			}
 			
 			if( bShowOptions ) {
-				Options ops(pScreen/*, &mouse*/, &config);
+				Options ops(pScreen, &mouse, &config);
 				while(ops.Loop()){}
 				continue;
 			}
